@@ -222,12 +222,6 @@
         var pct = (numTokens + g_tokenAmountOnPost) / 8048.0;
         setOverlayTransparency(pct);
         console.log("pct = " + pct);
-
-        // Select the h1 element by its id
-        const titleElement = document.querySelector('#title');
-
-        // Change the text content of the h1 element
-        titleElement.textContent = 'Police Station: ' + getTimeStrForTokens(numTokens);
       }
 
       function getRandomCooldown(min, max) {
@@ -618,12 +612,13 @@
           return;
         }
 
+        addMessage("Detective", `${message}`, 'self_avatar.jpg');
+
         if (g_messages.length <= 0)
           message = "[BEGIN]";
 
         document.querySelector("#message").value = "";
         g_accumulatedMsgs += message;
-        addMessage("Detective", `${message}`, 'self_avatar.jpg');
         console.log("Added to g_accumulatedMsgs = " + g_accumulatedMsgs);
         getResponse(!g_error400);
       });
