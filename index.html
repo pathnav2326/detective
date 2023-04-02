@@ -138,9 +138,9 @@
         //{ "role": "system", "content": "Richard Greene will mention that he saw Sarah in the hallway near the scene of the crime at the time of the murder, which contradicts her claim of being in the kitchen. When confronted with this information, Sarah admits she was in the hallway and saw Peter commit the murder. She was scared for her life and didn't want to come forward earlier, but now agrees to testify against Peter.\nMurderer's motives and clues:\nPeter Johnson had a financial dispute with the victim, who refused to give him a loan when he desperately needed it. The victim also had incriminating information about Peter's illegal activities, which could have ruined his life.\nClues: Richard Greene overheard the argument between Peter and the victim and can testify to the heated nature of their disagreement. Sarah Thompson knows about Peter's financial troubles and how desperate he was for money.\nPath to victory:\nInterview each suspect and gather their claims.\nDiscover the motive by talking to Richard and Sarah about Peter's financial issues and his argument with the victim.\nConfront Sarah with Richard's information about her being in the hallway. Sarah will admit that she saw Peter commit the murder and agree to testify against him.\nUse the gathered evidence to convict Peter Johnson as the murderer." },        
 
         // Alternate plot
-        { "role": "system", "content": "Richard Smithers was murdered in the study near the library with his own Mora Companion Heavy Duty knife, the only entrance to the study is the library.\nWitness 1: Sarah Taylor, 29, long blonde hair, wearing a leather jacket and jeans. She is an outgoing and adventurous extrovert. She claims she was in the garden, tending to the plants. She heard a commotion but didn't see anything unusual.\nWitness 2: Martin Hayes, 45, tall, bald, with a beard, wearing a suit. He is a confident businessman with a direct and honest demeanor. He claims he was in the dining room, enjoying a glass of wine while his protege, Sarah was in the living room. He heard a scream but didn't see anyone when he went to investigate.\nWitness 3: Lucy Thompson, 38, short curly brown hair, glasses, and a plaid shirt. She is a soft-spoken introvert with a keen eye for detail. She claims that on the night of the murder, she was in the library, reading a book about rare plants. She heard a struggle, but by the time she arrived at the scene, the victim was already dead.\nThe real murderer's name: Sarah\nLine of questioning:\nTo Lucy: \"What was the title of the book you were reading?\"\nLucy answers: \"Rare Plants of the Amazon.\"\nTo Martin: \"What kind of wine were you drinking?\"\nMartin answers: \"A 2010 Pinot Noir.\"\nTo Sarah: \"What plants were you tending to in the garden?\"\nSarah answers: \"I was pruning the roses.\"\nTo Lucy: \"If you ask Lucy for a description of the library, or you ask her if she noticed/saw/heard anything strange/unusual/etc. that night, she will reply with: \"\nLucy hesitates, then answers: \"Well, I saw a wine glass on the table, but I didn't think much of it.\"\nExplanation: Martin lied about being in the dining room. His wine glass being in the library proves he was there instead. Confront Martin with this information, and he will be trapped in his lie.\nDetective: \"Martin, Lucy found your wine glass in the library, not in the dining room. You lied about your location during the murder. Why?\"\nMartin, realizing he's caught, confesses: \"Alright, I wasn't in the dining room. I was in the library, but I didn't kill anyone. I saw Sarah sneak up behind the victim and stab him. I was too scared to do anything, and I didn't want to get involved. But I can't let an innocent person take the blame. I'll testify against her.\"\nBy trapping Martin in his lie about his location, he is forced to admit the truth and agree to testify against the real murderer, Sarah Taylor." },
+        { "role": "system", "content": "Richard Smithers was murdered in the study near the library with his own Mora Companion Heavy Duty knife, the only entrance to the study is the library.\nWitness 1: Sarah Taylor, 29, white, long blonde hair, wearing a leather jacket and jeans. She is an outgoing and adventurous extrovert. She claims she was in the garden, tending to the plants. She heard a commotion but didn't see anything unusual.\nWitness 2: Martin Hayes, 33, white, black hair, glasses, wearing a suit. He is a confident, calm businessman with a direct and arrogant demeanor. He claims he was in the dining room, enjoying a glass of wine while his protege, Sarah, was in the living room. He heard a scream but didn't see anyone when he went to investigate.\nWitness 3: Lucy Thompson, 30, white, curly hair, glasses, and a plaid shirt. She is a soft-spoken introvert with a keen eye for detail. She claims that on the night of the murder, she was in the library, reading a book about rare plants. She heard a struggle, but by the time she arrived at the scene, the victim was already dead.\nThe real murderer's name: Sarah\nLine of questioning:\nTo Lucy: \"What was the title of the book you were reading?\"\nLucy answers: \"Rare Plants of the Amazon.\"\nTo Martin: \"What kind of wine were you drinking?\"\nMartin answers: \"A 2010 Pinot Noir.\"\nTo Sarah: \"What plants were you tending to in the garden?\"\nSarah answers: \"I was pruning the roses.\"\nTo Lucy: \"If you ask Lucy for a description of the library, or you ask her if she noticed/saw/heard anything strange/unusual/etc. that night, she will reply with: \"\nLucy hesitates, then answers: \"Well, I saw a wine glass on the table, but I didn't think much of it.\"\nExplanation: Martin lied about being in the dining room. His wine glass being in the library proves he was there instead. Confront Martin with this information, and he will be trapped in his lie.\nDetective: \"Martin, Lucy found your wine glass in the library, not in the dining room. You lied about your location during the murder. Why?\"\nMartin, realizing he's caught, confesses: \"Alright, I wasn't in the dining room. I was in the library, but I didn't kill anyone. I saw Sarah sneak up behind the victim and stab him. I was too scared to do anything, and I didn't want to get involved. But I can't let an innocent person take the blame. I'll testify against her.\"\nBy trapping Martin in his lie about his location, he is forced to admit the truth and agree to testify against the real murderer, Sarah Taylor." },
 
-        { "role": "system", "content": "The game is played in the form of dialog. If I ask a question, or one similar to the right question, then the story unfolds in accordance with the script. I am only allowed to ask questions to one of the suspects at a time, and your responses should be the in the style of 'Joe Smith: Hello, I am joe.' Add informal mannerisms to the dialog/text of each character consistent with their personality." },
+        { "role": "system", "content": "The game is played in the form of dialog. If I ask a question, or one similar to the right question, then the story unfolds in accordance with the script. I am only allowed to ask questions to one of the suspects at a time, and your responses should be the in the style of 'FULL NAME: Hello, I am joe.' Add informal mannerisms to the dialog/text of each character consistent with their personality." },
         { "role": "system", "content": "DO NOT WRITE: 'X said', 'X claimed', 'X told me', or anything similar! They have NO IDEA what the others have said and they haven't spoken to each other! Make something up out of thin air if the answer to my question is a reference to something someone else said." },
         { "role": "system", "content": "I am speaking directly to the Suspect who last replied. Only one Suspect can reply at a time." }
       ];
@@ -151,7 +151,10 @@
       let g_tokenAmountOnPost = 800;
       let g_intro = `A murder just took place, you have until 7:00 PM to crack the case. Time is a function of the amount of text in this dialog. There are 3 suspects locked in seperate rooms. All of them deny being the murderer, but they were all there that day. They all deny that the other 2 were the murderers as well. Secretly, one of them saw the other do it. If you confront/press the right suspect with the right information, they'll admit the truth and agree to testify. You may interrogate each of them seperately.\n\nSend any message to begin.`;
       let g_token = "";
-      
+      let g_witness1 = `Sarah Taylor`;
+      let g_witness2 = `Martin Hayes`;
+      let g_witness3 = `Lucy Thompson`;
+
       let g_accumulatedMsgs = "";
       let g_lastTypedMsg = new Date(0);
       let g_error400 = false;
@@ -551,7 +554,27 @@
             console.log("Resetting g_messages after getting summary = " + strcontent);
           }
 
-          addMessage("CAPCOM", strcontent, 'ai_avatar.jpg', null, true);
+          var avatarfilename = 'ai_avatar.jpg';
+          var messageUserSees = strcontent;
+          var messageSenderName = "CAPCOM";
+
+          if (messageUserSees.startsWith(g_witness1 + ":")) {
+            avatarfilename = 'witness_1.jpg';
+            messageUserSees = messageUserSees.replace(g_witness1 + ":", "");
+            messageSenderName = g_witness1;
+          }
+          else if (messageUserSees.startsWith(g_witness2 + ":")) {
+            avatarfilename = 'witness_2.jpg';
+            messageUserSees = messageUserSees.replace(g_witness2 + ":", "");
+            messageSenderName = g_witness2;
+          }
+          else if (messageUserSees.startsWith(g_witness3 + ":")) {
+            avatarfilename = 'witness_3.jpg';
+            messageUserSees = messageUserSees.replace(g_witness3 + ":", "");
+            messageSenderName = g_witness3;
+          }
+
+          addMessage(messageSenderName, messageUserSees, avatarfilename, null, true);
 
           // The synopsis doesn't need to be saved twice, only printed to the player
           if (g_messages.length == 1)
