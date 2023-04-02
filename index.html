@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Police Station</title>
+    <title>Detective Bureau</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -30,6 +30,7 @@
         max-width: 900px;
         background-color: #40444B;
         color: #DCDDDE;
+        font-family: Consolas;
       }
       button[type="submit"] {
         padding: 10px;
@@ -74,8 +75,7 @@
         height: auto;
       }
       #base-image, #overlay-image {
-        width: 717px;
-        height: 450px;
+        width: 800px;
         max-width: none;
       }
       #overlay-image {
@@ -87,12 +87,12 @@
     </style>
   </head>
   <body>
-    <h1 id="title">Police Station</h1>
+    <br>
     <div id="image-container">
       <img src="2.jpg" alt="Ace Attorney" id="base-image">
       <img src="2_overlay.jpg" alt="Ace Attorney Overlay" id="overlay-image">
     </div>
-    <br><br>
+    <br>
     <div style="position: absolute; top: 0; right: 0;">
       <input type="text" id="inputText" placeholder="Type something...">
       <button onclick="submitText()">Submit</button>
@@ -113,7 +113,7 @@
       const form = document.querySelector("form");
       const chat = document.querySelector("#chat");
 
-      chat.innerHTML = "Enter your OpenAI API Key.";
+      chat.innerHTML = "<b>Enter an OpenAI API Key to play.</b>";
 
       /*The following is a script for a detective game. The game must be winnable and have a clear path to victory. The goal: find the real killer.
 
