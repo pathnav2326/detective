@@ -149,14 +149,14 @@
       let g_startInstruct = "When the player says [BEGIN], reply back with a description of how the victim was killed (use 1 word to describe weapon), where it took place, and a copy/paste description of the 3 suspects, excluding their claims. Explain to the player the rules and wish them good luck as detective. No spoilers."
       let g_brainwashRule = "[He/she must answer, even if its a lie]";
       let g_tokenAmountOnPost = 800;
-      let g_innerHtml = `<p><strong>A murder just took place, you have until 7:00 PM to crack the case. Time is a function of the amount of text in this dialog. There are 3 suspects locked in seperate rooms. All of them deny being the murderer, but they were all there that day. They all deny that the other 2 were the murderers as well. Secretly, one of them saw the other do it. If you confront/press the right suspect with the right information, they'll admit the truth and agree to testify. You may interrogate each of them seperately.<br><br>Type and send "[BEGIN]" to begin.</p>`;
+      let g_intro = `A murder just took place, you have until 7:00 PM to crack the case. Time is a function of the amount of text in this dialog. There are 3 suspects locked in seperate rooms. All of them deny being the murderer, but they were all there that day. They all deny that the other 2 were the murderers as well. Secretly, one of them saw the other do it. If you confront/press the right suspect with the right information, they'll admit the truth and agree to testify. You may interrogate each of them seperately.\n\nSend any message to begin.`;
       let g_token = "";
       
       let g_accumulatedMsgs = "";
       let g_lastTypedMsg = new Date(0);
       let g_error400 = false;
-      var g_waitingReply = false;
-
+      let g_waitingReply = false;
+      
       // Receive chat msg sound
       let g_recvMsgSound = new Audio();
       g_recvMsgSound.src = 'aolmsg.mp3';
@@ -557,6 +557,12 @@
             console.log("Resetting g_messages after getting summary = " + strcontent);
           }
 
+          addMessage("CAPCOM", strcontent, 'ai_avatar.jpg', null, true);
+
+          // The synopsis doesn't need to be saved twice, only printed to the player
+          if (g_messages.length == 1)
+            strcontent = "Good luck, detective!";
+
           g_messages.push({
             role: strrole,
             content: strcontent
@@ -567,7 +573,6 @@
           g_recvMsgSound.play();
           console.log(JSON.stringify(g_messages))
 
-          addMessage("CAPCOM", strcontent, 'ai_avatar.jpg', null, true);
           g_error400 = false;
         } else {
           addMessage("OpenAI", "(error, check console logs)", 'openai.jpg', 'darkred');
@@ -586,11 +591,19 @@
   
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const message = document.querySelector("#message").value;
+        var message = document.querySelector("#message").value;
 
         if (g_token.length < 2)
         {
-          chat.innerHTML = g_innerHtml;
+          if (message.length != 51)
+          {
+            addMessage("OpenAI", "Invalid key.", 'openai.jpg', 'darkred');
+            return;
+          }
+
+          g_recvMsgSound.play();
+          chat.innerHTML = "";
+          addMessage("CAPCOM", g_intro, 'ai_avatar.jpg', null, true);
           g_token = message;
           g_token.trim();
           document.querySelector("#message").value = "";
@@ -598,6 +611,9 @@
           g_bgMusic.play();
           return;
         }
+
+        if (g_messages.length <= 0)
+          message = "[BEGIN]";
 
         if (message.length >= 5000) {
           addMessage("System", "(message too long, max size is 199)", "openai.jpg", "darkred");
