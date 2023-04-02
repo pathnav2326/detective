@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Police Station</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #36393F;
+        color: #DCDDDE;
+      }
+      h1 {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+      form {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      label {
+        margin-right: 10px;
+      }
+      input[type="text"] {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #2F3136;
+        border-radius: 5px;
+        flex: 1;
+        max-width: 900px;
+        background-color: #40444B;
+        color: #DCDDDE;
+      }
+      button[type="submit"] {
+        padding: 10px;
+        font-size: 16px;
+        background-color: #7289DA;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button[type="submit"]:hover {
+        background-color: #5C6FB1;
+      }
+      #chat {
+        background-color: #2F3136;
+        border: 2px solid #40444B;
+        border-radius: 5px;
+        padding: 20px;
+        height: 400px;
+        overflow-y: scroll;
+        width: 70%;
+        margin: auto;
+        max-width: 900px;
+      }
+      #chat p {
+        margin-bottom: 10px;
+        color: #DCDDDE;
+      }
+      #chat strong,
+      #chat span,
+      #chat b,
+      #chat i {
+        font-size: calc(1rem * 1.15);
+      }
+      #image-container {
+        display: flex;
+        justify-content: center;
+        position: relative;
+      }
+      #image-container img {
+        max-width: 100%;
+        height: auto;
+      }
+      #base-image, #overlay-image {
+        width: 717px;
+        height: 450px;
+        max-width: none;
+      }
+      #overlay-image {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="title">Police Station</h1>
+    <div id="image-container">
+      <img src="2.jpg" alt="Ace Attorney" id="base-image">
+      <img src="2_overlay.jpg" alt="Ace Attorney Overlay" id="overlay-image">
+    </div>
+    <br><br>
+    <div style="position: absolute; top: 0; right: 0;">
+      <input type="text" id="inputText" placeholder="Type something...">
+      <button onclick="submitText()">Submit</button>
+      <button onclick="getText()">Get</button>
+    </div>
+    <div id="chat"></div>
+    <form>
+      <input type="text" id="message" name="message" autofocus autocomplete="off">
+      <button type="submit">Send</button>
+    </form>
+    <style>
+      i {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    </style>
+    
+    <script>
+      const form = document.querySelector("form");
+      const chat = document.querySelector("#chat");
+
+      chat.innerHTML = "Enter your OpenAI API Key.";
+
+      /*The following is a script for a detective game. The game must be winnable and have a clear path to victory. The goal: find the real killer.
+
+      A murder just took place. There are 3 suspects locked in seperate rooms. They can't hear what other suspects say. All of them deny being the murderer, but they were all there that day. They all deny that the other 2 were the murderers as well. Secretly, one of them saw the other do it.
+
+      - Witness name, age, appearence, personality, and what they claim happened that night
+      - Witness name, age, appearence, personality, and what they claim happened that night
+      - Witness name, age, appearence, personality, and what they claim happened that night
+
+      - The real murder's name
+
+      - Information that a different witnesses knows and will disclose, that will contradict the claim of another witness (the one who saw the murder), and an explanation for why being trapped in that lie forces him to admit the truth and agree to testify against the real murderer.
+
+      - An explanation of the murderer's motives, and clues about this movie that the other two suspects know
+      */
+
+      let g_initialMessages = [
+        { "role": "system", "content": "The following is a script for a detective game. A murder just took place. There are 3 suspects locked in seperate rooms. None of them have spoken to each other. All of them deny being the murderer, but they were all there that day. They all deny that the other 2 were the murderers as well. Secretly, one of them saw the other do it. I am allowed to interrogate each of them seperately. The murderer will avoid saying anything that makes him/her look suspicious. Eventually, in accordance with the script below, the truth comes up." },
+
+        // Generated plot goes here
+        //{ "role": "system", "content": "Title: A Whisper of Truth\nSuspects:\nWitness: Richard Greene\nAge: 45\nAppearance: Tall, thin, with short, graying hair and a well-groomed mustache\nPersonality: Articulate, calm, and observant\nClaim: On the night of the murder, he was in the library reading a book.\nWitness: Sarah Thompson\nAge: 39\nAppearance: Average height, with long, wavy brown hair and brown eyes\nPersonality: Outgoing, friendly, and a bit of a gossip\nClaim: On the night of the murder, she was in the kitchen, preparing food for the next day.\nWitness: Peter Johnson\nAge: 28\nAppearance: Short, muscular build, with short, curly black hair and a goatee\nPersonality: Impulsive, hot-headed, and prone to anger\nClaim: On the night of the murder, he was in the garden, taking a walk to cool off. He will deflect about why he was upset unless I say that someone heard him arguing with the victim.\nReal murderer's name: Peter Johnson\nInformation:\nSarah Thompson saw Peter Johnson commit the murder. She was too scared to admit it at first, but she will reveal this after being confronted with a contradiction in her story.\nRichard Greene knows that Peter had a motive for the murder, as he overheard a heated argument between Peter and the victim regarding money.\n" }, 
+        //{ "role": "system", "content": "Richard Greene will mention that he saw Sarah in the hallway near the scene of the crime at the time of the murder, which contradicts her claim of being in the kitchen. When confronted with this information, Sarah admits she was in the hallway and saw Peter commit the murder. She was scared for her life and didn't want to come forward earlier, but now agrees to testify against Peter.\nMurderer's motives and clues:\nPeter Johnson had a financial dispute with the victim, who refused to give him a loan when he desperately needed it. The victim also had incriminating information about Peter's illegal activities, which could have ruined his life.\nClues: Richard Greene overheard the argument between Peter and the victim and can testify to the heated nature of their disagreement. Sarah Thompson knows about Peter's financial troubles and how desperate he was for money.\nPath to victory:\nInterview each suspect and gather their claims.\nDiscover the motive by talking to Richard and Sarah about Peter's financial issues and his argument with the victim.\nConfront Sarah with Richard's information about her being in the hallway. Sarah will admit that she saw Peter commit the murder and agree to testify against him.\nUse the gathered evidence to convict Peter Johnson as the murderer." },        
+
+        // Alternate plot
+        { "role": "system", "content": "Richard Smithers was murdered in the study near the library with his own Mora Companion Heavy Duty knife, the only entrance to the study is the library.\nWitness 1: Sarah Taylor, 29, long blonde hair, wearing a leather jacket and jeans. She is an outgoing and adventurous extrovert. She claims she was in the garden, tending to the plants. She heard a commotion but didn't see anything unusual.\nWitness 2: Martin Hayes, 45, tall, bald, with a beard, wearing a suit. He is a confident businessman with a direct and honest demeanor. He claims he was in the dining room, enjoying a glass of wine while his protege, Sarah was in the living room. He heard a scream but didn't see anyone when he went to investigate.\nWitness 3: Lucy Thompson, 38, short curly brown hair, glasses, and a plaid shirt. She is a soft-spoken introvert with a keen eye for detail. She claims that on the night of the murder, she was in the library, reading a book about rare plants. She heard a struggle, but by the time she arrived at the scene, the victim was already dead.\nThe real murderer's name: Sarah\nLine of questioning:\nTo Lucy: \"What was the title of the book you were reading?\"\nLucy answers: \"Rare Plants of the Amazon.\"\nTo Martin: \"What kind of wine were you drinking?\"\nMartin answers: \"A 2010 Pinot Noir.\"\nTo Sarah: \"What plants were you tending to in the garden?\"\nSarah answers: \"I was pruning the roses.\"\nTo Lucy: \"If you ask Lucy for a description of the library, or you ask her if she noticed/saw/heard anything strange/unusual/etc. that night, she will reply with: \"\nLucy hesitates, then answers: \"Well, I saw a wine glass on the table, but I didn't think much of it.\"\nExplanation: Martin lied about being in the dining room. His wine glass being in the library proves he was there instead. Confront Martin with this information, and he will be trapped in his lie.\nDetective: \"Martin, Lucy found your wine glass in the library, not in the dining room. You lied about your location during the murder. Why?\"\nMartin, realizing he's caught, confesses: \"Alright, I wasn't in the dining room. I was in the library, but I didn't kill anyone. I saw Sarah sneak up behind the victim and stab him. I was too scared to do anything, and I didn't want to get involved. But I can't let an innocent person take the blame. I'll testify against her.\"\nBy trapping Martin in his lie about his location, he is forced to admit the truth and agree to testify against the real murderer, Sarah Taylor." },
+
+        { "role": "system", "content": "The game is played in the form of dialog. If I ask a question, or one similar to the right question, then the story unfolds in accordance with the script. I am only allowed to ask questions to one of the suspects at a time, and your responses should be the in the style of 'Joe Smith: Hello, I am joe.' Add informal mannerisms to the dialog/text of each character consistent with their personality." },
+        { "role": "system", "content": "DO NOT WRITE: 'X said', 'X claimed', 'X told me', or anything similar! They have NO IDEA what the others have said and they haven't spoken to each other! Make something up out of thin air if the answer to my question is a reference to something someone else said." },
+        { "role": "system", "content": "I am speaking directly to the Suspect who last replied. Only one Suspect can reply at a time." }
+      ];
+
+      let g_messages = [];
+      let g_startInstruct = "When the player says [BEGIN], reply back with a description of how the victim was killed (use 1 word to describe weapon), where it took place, and a copy/paste description of the 3 suspects, excluding their claims. Explain to the player the rules and wish them good luck as detective. No spoilers."
+      let g_brainwashRule = "[He/she must answer, even if its a lie]";
+      let g_tokenAmountOnPost = 800;
+      let g_innerHtml = `<p><strong>A murder just took place, you have until 7:00 PM to crack the case. There are 3 suspects locked in seperate rooms. All of them deny being the murderer, but they were all there that day. They all deny that the other 2 were the murderers as well. Secretly, one of them saw the other do it. If you confront/press the right suspect with the right information, they'll admit the truth and agree to testify. You are allowed to interrogate each of them seperately.<br><br>Type and send "[BEGIN]" to begin.</p>`;
+      let g_token = "";
+      
+      let g_accumulatedMsgs = "";
+      let g_lastTypedMsg = new Date(0);
+      let g_error400 = false;
+      var g_waitingReply = false;
+
+      // Receive chat msg sound
+      let g_recvMsgSound = new Audio();
+      g_recvMsgSound.src = 'aolmsg.mp3';
+
+      // Music
+      let g_bgMusic = new Audio();
+      g_bgMusic.src = 'music.mp3';
+      g_bgMusic.loop = true;
+
+      // Typewriter
+      let g_blipSound = new Audio('dialogblp.mp3');
+      let g_lastBlipTime = 0;
+      let g_blipCooldown = getRandomCooldown(70, 100);
+
+      function setOverlayTransparency(transparency) {
+        const overlayImage = document.getElementById('overlay-image');
+        overlayImage.style.opacity = transparency;
+      }
+
+      function countTokens(message) {
+        const wordAndPunctuations = /[\w]+|[^\s\w]+/g;
+        const matches = message.match(wordAndPunctuations);
+        return matches ? matches.length : 0;
+      }
+
+      function calculateTotalTokens(param) {
+        let totalTokens = 0;
+        param.forEach((messageObj) => {
+          const messageContent = messageObj.content;
+          totalTokens += countTokens(messageContent);
+        });
+        return totalTokens;
+      }
+
+      function getTimeStrForTokens(numTokens) {
+        // Account for max tokens
+        numTokens += g_tokenAmountOnPost; 
+        var pct = numTokens / 8048.0;
+
+        const date = new Date(0);
+
+        var maxMinutes = 420.0;
+
+        date.setHours(12);
+        date.setMinutes(maxMinutes * pct);
+
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        var meridian = hour >= 12 ? 'PM' : 'AM';
+
+        // convert hour from 24-hour format to 12-hour format
+        hour = hour % 12;
+        hour = hour ? hour : 12; // 0 should be converted to 12
+
+        // add leading zero to minute if less than 10
+        minute = minute < 10 ? '0' + minute : minute;
+
+        const dateTimeString = `${hour}:${minute} ${meridian}`;
+        return dateTimeString;
+      }
+
+      function adjustTimeRegardingTokens(numTokens) {
+        var pct = (numTokens + g_tokenAmountOnPost) / 8048.0;
+        setOverlayTransparency(pct);
+        console.log("pct = " + pct);
+
+        // Select the h1 element by its id
+        const titleElement = document.querySelector('#title');
+
+        // Change the text content of the h1 element
+        titleElement.textContent = 'Police Station: ' + getTimeStrForTokens(numTokens);
+      }
+
+      function getRandomCooldown(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function playingBlipSound() {
+        const currentTime = new Date().getTime();
+
+        if (currentTime - g_lastBlipTime > g_blipCooldown) {
+          g_blipSound.currentTime = 0;
+          g_blipSound.play();
+          g_lastBlipTime = currentTime;
+          g_blipCooldown = getRandomCooldown(70, 100); // Update the cooldown after playing the blip sound
+        }
+      }
+
+      function typeWriter(element, text, index, intervalMin, intervalMax, chatElement) {
+        if (index < text.length) {
+          if (/^[a-zA-Z0-9]$/.test(text.charAt(index))) {
+            playingBlipSound();
+          }
+
+          const tempElement = document.createElement('div');
+          tempElement.innerHTML = text.slice(0, index + 1);
+          element.innerHTML = '';
+
+          tempElement.childNodes.forEach((node) => {
+            element.appendChild(node.cloneNode(true));
+          });
+
+          index++;
+          chatElement.scrollTop = chatElement.scrollHeight;
+
+          var waitTime = getRandomCooldown(intervalMin, intervalMax);
+
+          if (text.slice(index - 4, index) === '</i>') {
+            waitTime = 1000; // Pause for 1000ms after completing an <i> tag
+          }
+
+          if (waitTime > 5) {
+            setTimeout(() => typeWriter(element, text, index, intervalMin, intervalMax, chatElement), waitTime);
+          } else {
+            typeWriter(element, text, index, intervalMin, intervalMax, chatElement);
+          }
+        }
+      }
+
+      function addMessage(name, message, avatarFilename, color, typewriter) {
+        if (message.length < 1)
+          return;
+
+        const p = document.createElement("p");
+        const img = document.createElement("img");
+        const div1 = document.createElement("div");
+        const div2 = document.createElement("div");
+        const strong = document.createElement("strong");
+        const messageWrapper = document.createElement("div");
+        const span1 = document.createElement("span");
+        const span2 = document.createElement("span");
+
+        img.src = avatarFilename;
+        img.alt = "Avatar";
+        img.style.verticalAlign = "middle";
+        img.style.borderRadius = "50%";
+        img.style.marginRight = "10px";
+        img.style.width = "50px";
+        img.style.height = "50px";
+
+        strong.appendChild(document.createTextNode(name));
+        strong.style.marginRight = "5px";
+
+        message = message.replace(/\n/g, "<br>");
+        //message = message.replace(/\*\./g, ".*");
+        //message = message.replace(/_/g, "*");
+        //message = message.replace(/\*((?:.|\n)*?)\*/g, "<br><i>$1</i><br>");
+        //message = message.replace(/"(.*?)"/g, "<b>''$1''</b>");
+
+        if (message.startsWith("<br>"))
+          message = message.substring(4);
+
+        span1.style.flex = "1";
+
+        console.log(typewriter);
+
+        if (typewriter) {
+          if (message.length > 400)
+            typeWriter(span1, message, 0, 10, 30, chat);
+          else if (message.length > 300)
+            typeWriter(span1, message, 0, 20, 40, chat);
+          else if (message.length > 200)
+            typeWriter(span1, message, 0, 30, 50, chat);
+          else if (message.length > 100)
+            typeWriter(span1, message, 0, 40, 60, chat);
+          else if (message.length > 50)
+            typeWriter(span1, message, 0, 50, 70, chat);
+          else
+            typeWriter(span1, message, 0, 60, 80, chat);
+        } else {
+          span1.innerHTML = message;
+        }
+
+        span2.appendChild(document.createTextNode(getTimeStrForTokens(calculateTotalTokens([...g_initialMessages, ...g_messages]))));
+        span2.style.fontSize = "0.8em";
+        span2.style.opacity = "0.7";
+
+        const nameTimeWrapper = document.createElement("div");
+        nameTimeWrapper.appendChild(strong);
+        nameTimeWrapper.appendChild(span2);
+        nameTimeWrapper.style.display = "flex";
+        nameTimeWrapper.style.flexDirection = "row";
+        nameTimeWrapper.style.alignItems = "center";
+
+        messageWrapper.appendChild(nameTimeWrapper);
+        messageWrapper.appendChild(span1);
+        messageWrapper.style.display = "flex";
+        messageWrapper.style.flexDirection = "column";
+
+        div1.appendChild(img);
+        div1.style.flex = "0 0 50px";
+
+        div2.appendChild(messageWrapper);
+        div2.style.display = "flex";
+        div2.style.alignItems = "flex-start";
+        div2.style.flex = "1";
+        div2.style.marginLeft = "10px";
+
+        p.appendChild(div1);
+        p.appendChild(div2);
+        p.style.display = "flex";
+        p.style.alignItems = "flex-start";
+        p.style.maxWidth = "900px";
+        p.style.margin = "10px";
+
+        if (color) {
+          p.style.color = color;
+        }
+
+        chat.appendChild(p);
+
+        // scroll to the bottom of the chatbox
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      function submitText() {
+        // get the text input element by id
+        const inputText = document.getElementById("inputText");
+        // get the text value from the input element
+        const text = inputText.value;
+
+        g_messages = JSON.parse(text);
+        console.log(JSON.stringify(g_messages))
+        console.log("Messages set.");
+
+        while (chat.firstChild) {
+          chat.removeChild(chat.firstChild);
+        }
+
+        for (let i = 0; i < g_messages.length; ++i) {
+          const itr = g_messages[i];
+
+          if (itr.role == "user")
+            addMessage("Detective", itr.content, 'self_avatar.jpg');
+
+          if (itr.role == "assistant")
+            addMessage("CAPCOM", itr.content, 'ai_avatar.jpg');
+        }
+      }
+
+      function getText() {
+        navigator.clipboard.writeText(JSON.stringify(g_messages));
+      }
+      
+      async function getResponse(shouldWait, removeMyPrompt = false) {
+
+        if (g_waitingReply)
+          return;
+
+        if (shouldWait) {
+          while (new Date() - g_lastTypedMsg < 100) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            var dif = new Date() - g_lastTypedMsg;
+            console.log("diff = " + dif)
+          }
+        }
+
+        if (g_accumulatedMsgs.length <= 0 && !g_error400)
+          return;
+
+        var copy_accumulatedMsgs = g_accumulatedMsgs;
+        g_accumulatedMsgs = "";
+
+        if (g_error400)
+          copy_accumulatedMsgs = "Summarize key details revealed so far in 300 words.";
+
+        var sendMessages = [];
+
+        if (g_messages.length > 2) {
+          sendMessages = [...g_messages, ...g_initialMessages];
+        } else if (g_messages.length < 1) {
+          sendMessages = [...g_messages, ...g_initialMessages];
+          sendMessages.push({
+            role: 'system',
+            content: g_startInstruct
+          })
+        } else {
+          sendMessages = [...g_initialMessages, ...g_messages];
+        }
+
+        sendMessages.push({
+          role: 'user',
+          content: copy_accumulatedMsgs + g_brainwashRule
+        });
+
+        adjustTimeRegardingTokens(calculateTotalTokens(sendMessages));
+
+        var pushCount = 1;
+        g_messages.push({
+          role: 'user',
+          content: copy_accumulatedMsgs
+        }, );
+
+        var maxTokens = g_tokenAmountOnPost;
+
+        if (g_error400)
+          maxTokens = g_tokenAmountOnPost / 2;
+
+        const fetchWithTimeout = async (url, options, timeout = 300000) => {
+          return Promise.race([
+            fetch(url, options),
+            new Promise((resolve) =>
+              setTimeout(() => resolve({
+                timeoutError: true
+              }), timeout)
+            ),
+          ]);
+        };
+
+        let httpResponse = {
+          ok: false,
+          status: 429
+        };
+
+        while (httpResponse.status == 429) {
+          console.log(JSON.stringify(sendMessages));
+          console.log("maxTokens = " + maxTokens);
+          console.log("trying...");
+          g_waitingReply = true;
+
+          try {
+            
+            httpResponse = await fetchWithTimeout(
+              "https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer " + g_token // "
+                },
+                body: JSON.stringify({
+                  model: "gpt-4",
+                  messages: sendMessages,
+                  temperature: 0.7,
+                  max_tokens: maxTokens,
+                  top_p: 1,
+                  frequency_penalty: 0,
+                  presence_penalty: 0.0,
+                }),
+              }
+            );
+          } catch (error) {
+            httpResponse.ok = false;
+          }
+        }
+
+        g_waitingReply = false;
+
+        if (httpResponse.timeoutError)
+          httpResponse.ok = false;
+
+        console.log("Response:", httpResponse);
+
+        if (!httpResponse.ok) {
+          for (var i = 0; i < pushCount; i += 1)
+            g_messages.pop();
+
+          // Anything else is a network error or something, and not because we ran out of room
+          if (httpResponse.status != 400) {
+            addMessage("OpenAI", `(http error ${httpResponse.status}, try again)`, 'openai.jpg', 'darkred');
+            return;
+          }
+
+          if (g_error400)
+            return;
+
+          g_error400 = true;
+          addMessage("OpenAI", "(limited reached, summarizing and resetting)", 'openai.jpg', 'darkred');
+          await getResponse(false);
+
+          if (g_error400) {
+            addMessage("OpenAI", "(failed to reset, try again)", 'openai.jpg', 'darkred');
+            g_error400 = false;
+          } else {
+            addMessage("OpenAI", "(successful, continue)", 'openai.jpg', 'darkgreen');
+          }
+
+          return;
+        }
+
+        response = await httpResponse.json();
+
+        var strrole = "";
+        var strcontent = "";
+
+        strrole = response.choices[0].message.role;
+        strcontent = response.choices[0].message.content;
+
+        console.log(strcontent);
+
+        if (strcontent.length > 0) {
+          if (removeMyPrompt) {
+            for (var i = 0; i < pushCount; i += 1)
+              g_messages.pop();
+          }
+
+          if (g_error400) {
+            g_messages = [...g_initialMessages];
+            console.log("Resetting g_messages after getting summary = " + strcontent);
+          }
+
+          g_messages.push({
+            role: strrole,
+            content: strcontent
+          }, );
+
+          adjustTimeRegardingTokens(calculateTotalTokens([...g_messages, ...g_initialMessages]));
+
+          g_recvMsgSound.play();
+          console.log(JSON.stringify(g_messages))
+
+          addMessage("CAPCOM", strcontent, 'ai_avatar.jpg', null, true);
+          g_error400 = false;
+        } else {
+          addMessage("OpenAI", "(error, check console logs)", 'openai.jpg', 'darkred');
+          chatbox.scrollTop = chatbox.scrollHeight;
+          for (var i = 0; i < pushCount; i += 1)
+            g_messages.pop();
+        }
+      }
+
+      /**
+      * Start
+      */
+
+      setOverlayTransparency(0.0);
+      adjustTimeRegardingTokens(calculateTotalTokens([...g_initialMessages, ...g_messages]));
+  
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const message = document.querySelector("#message").value;
+
+        if (g_token.length < 2)
+        {
+          chat.innerHTML = g_innerHtml;
+          g_token = message;
+          g_token.trim();
+          document.querySelector("#message").value = "";
+          g_lastTypedMsg = new Date();
+          g_bgMusic.play();
+          return;
+        }
+
+        if (message.length >= 5000) {
+          addMessage("System", "(message too long, max size is 199)", "openai.jpg", "darkred");
+        } else if (message.length <= 0) {
+          addMessage("System", `(message is empty)`, "openai.jpg", "darkred");
+        } else {
+          document.querySelector("#message").value = "";
+          g_accumulatedMsgs += message;
+          addMessage("Detective", `${message}`, 'self_avatar.jpg');
+          console.log("Added to g_accumulatedMsgs = " + g_accumulatedMsgs);
+          getResponse(!g_error400);
+        }
+      });
+
+    </script>
+ </body>
+</html>    
