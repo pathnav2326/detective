@@ -592,11 +592,17 @@
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         var message = document.querySelector("#message").value;
+       
+        if (message.length >= 5000) {
+          addMessage("System", "(message too long, max size is 199)", "openai.jpg", "darkred");
+          return;
+        } 
+        else if (message.length <= 0) {
+          return;
+        } 
 
-        if (g_token.length < 2)
-        {
-          if (message.length != 51)
-          {
+        if (g_token.length < 2) {
+          if (message.length != 51) {
             addMessage("OpenAI", "Invalid key.", 'openai.jpg', 'darkred');
             return;
           }
@@ -615,17 +621,11 @@
         if (g_messages.length <= 0)
           message = "[BEGIN]";
 
-        if (message.length >= 5000) {
-          addMessage("System", "(message too long, max size is 199)", "openai.jpg", "darkred");
-        } else if (message.length <= 0) {
-          addMessage("System", `(message is empty)`, "openai.jpg", "darkred");
-        } else {
-          document.querySelector("#message").value = "";
-          g_accumulatedMsgs += message;
-          addMessage("Detective", `${message}`, 'self_avatar.jpg');
-          console.log("Added to g_accumulatedMsgs = " + g_accumulatedMsgs);
-          getResponse(!g_error400);
-        }
+        document.querySelector("#message").value = "";
+        g_accumulatedMsgs += message;
+        addMessage("Detective", `${message}`, 'self_avatar.jpg');
+        console.log("Added to g_accumulatedMsgs = " + g_accumulatedMsgs);
+        getResponse(!g_error400);
       });
 
     </script>
