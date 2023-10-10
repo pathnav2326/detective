@@ -145,7 +145,7 @@
       ];
 
       let g_messages = [];
-      let g_startInstruct = "When the player says [BEGIN], reply back with a description of how the victim was killed (use 1 word to describe weapon), where it took place, and a copy/paste description of the 3 suspects, excluding their claims. Explain to the player the rules and wish them good luck as detective. No spoilers."
+      let g_startInstruct = "When the player says [BEGIN], reply back with a vague description of how the victim was killed, that the murder weapon was 'a knife', that it took place in 'the study', and a copy/paste description of the 3 suspects (excluding their claims). Explain to the player the rules and wish them good luck as detective. This description should NOT elaborate on what rooms connect to the study nor should it mention what the name of the knife was or who owned it, they player must find that out on their own later."
       let g_brainwashRule = "";
       let g_tokenAmountOnPost = 800;
       let g_intro = `A murder just took place, you have until 6:30 PM to crack the case. Time is a function of the amount of text in this dialog. There are 3 suspects locked in seperate rooms. All of them deny being the murderer, but they were all there that day. They all deny that the other 2 were the murderers as well. Secretly, one of them saw the other do it. You may interrogate each of them seperately.\n\n- Requirements\nOne of them is a witness to the murder, one of them is the murderer. If you confront/press the person who saw the murder with the right information, they'll agree to testify.\n\nIt is up to you stay in character as Detective.\nSend any message to begin.`;
