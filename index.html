@@ -564,16 +564,19 @@
           if (messageUserSees.startsWith(g_witness1 + ":") || messageUserSees.startsWith(g_witness1.toUpperCase() + ":")) {
             avatarfilename = 'witness_1.jpg';
             messageUserSees = messageUserSees.replace(g_witness1 + ":", "");
+            messageUserSees = messageUserSees.replace(g_witness1.toUpperCase() + ":", "");
             messageSenderName = g_witness1;
           }
           else if (messageUserSees.startsWith(g_witness2 + ":") || messageUserSees.startsWith(g_witness2.toUpperCase() + ":")) {
             avatarfilename = 'witness_2.jpg';
             messageUserSees = messageUserSees.replace(g_witness2 + ":", "");
+            messageUserSees = messageUserSees.replace(g_witness2.toUpperCase() + ":", "");
             messageSenderName = g_witness2;
           }
           else if (messageUserSees.startsWith(g_witness3 + ":") || messageUserSees.startsWith(g_witness3.toUpperCase() + ":")) {
             avatarfilename = 'witness_3.jpg';
             messageUserSees = messageUserSees.replace(g_witness3 + ":", "");
+            messageUserSees = messageUserSees.replace(g_witness3.toUpperCase() + ":", "");
             messageSenderName = g_witness3;
           }
 
